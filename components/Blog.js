@@ -42,55 +42,74 @@ export default function Blog(
     const [isUploading, setIsUploading] = useState(false);
     const uploadImageQueue = [];
 
-    // async function createBlog(ev) {
-    //         ev.preventDefault();
-
-    //        const data = {title, slug, images, description, blogcategory: '', tags, status}
-
-    //        if (_id) {
-    //         await axios.put('http://localhost:3000/api/blogs', {...data, _id})   
-    //         toast.success('Data Updated')
-    //         router.push('/blogs')
-    //        }
-    //        else {
-    //         await axios.post('http://localhost:3000/api/blogs', data)
-    //         toast.success('Blog Created')
-    //         router.push('/blogs')
-    //        }
-
-    //        setRedirect(true)
-    // };  
-
     
+
+    // async function createBlog(ev) {
+    //     ev.preventDefault();
+
+    //     if(isUploading){
+    //         await Promise.all(uploadImageQueue)
+    //     }
+    
+    //     const data = { title, slug, images, description: '', tags, status };
+    
+    //     try {
+    //         if (_id) {
+    //             await axios.put('http://localhost:3000/api/blogs', { ...data, _id });
+    //             toast.success('Data Updated');
+              
+    //         } else {
+    //             console.log('Data being sent for new blog:', data); // Log the data being sent
+    //             await axios.post('http://localhost:3000/api/blogs', data);
+    //             toast.success('Blog Created');
+               
+    //         }
+    //         router.push('/blogs')
+    
+    //         setRedirect(true);
+    //     } catch (error) {
+    //         console.error('Error creating/updating blog:', error); // Log the error
+    //         toast.error('Failed to create/update blog'); // Notify user of failure
+    //     }
+    // };
+
+
 
     async function createBlog(ev) {
         ev.preventDefault();
-
-        if(isUploading){
-            await Promise.all(uploadImageQueue)
-        }
     
-        const data = { title, slug, images, description, blogcategory: '', tags, status };
+        if (isUploading) {
+            await Promise.all(uploadImageQueue);
+        }
+        
+        // Convert blogcategory array to a comma-separated string
+        const formattedCategory = blogcategory.join(', ');
+    
+        const data = { title, slug, images, description, blogcategory: formattedCategory, tags, status };
     
         try {
+            console.log('Data being sent:', data); // Log the data as an object
+    
             if (_id) {
                 await axios.put('http://localhost:3000/api/blogs', { ...data, _id });
                 toast.success('Data Updated');
-              
             } else {
-                console.log('Data being sent for new blog:', data); // Log the data being sent
                 await axios.post('http://localhost:3000/api/blogs', data);
                 toast.success('Blog Created');
-               
             }
-            router.push('/blogs')
     
+            // Log the blogcategory as an array for verification
+            console.log('Blog Category Array:', blogcategory); 
+    
+            router.push('/blogs');
             setRedirect(true);
         } catch (error) {
-            console.error('Error creating/updating blog:', error); // Log the error
-            toast.error('Failed to create/update blog'); // Notify user of failure
+            console.error('Error creating/updating blog:', error);
+            toast.error('Failed to create/update blog');
         }
     };
+    
+
 
     async function uploadImages(ev) {
         const files = ev.target?.files

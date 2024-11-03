@@ -48,32 +48,71 @@ export default function Project(
 
 
 
+    // async function createBlog(ev) {
+    //     ev.preventDefault();
+
+    //     if (isUploading) {
+    //         await Promise.all(uploadImageQueue)
+    //     }
+
+    //     const data = { title, slug, images, description, client, livepreview, projectcategory: '', tags, status };
+
+    //     try {
+    //         if (_id) {
+    //             await axios.put('http://localhost:3000/api/projects', { ...data, _id });
+    //             toast.success('Data Updated');
+
+    //         } else {
+    //             console.log('Data being sent for new blog:', data); // Log the data being sent
+    //             await axios.post('http://localhost:3000/api/projects', data);
+    //             toast.success('project Created');
+
+    //         }
+    //         router.push('/projects')
+
+    //         setRedirect(true);
+    //     } catch (error) {
+    //         console.error('Error creating/updating projects:', error); // Log the error
+    //         toast.error('Failed to create/update projects'); // Notify user of failure
+    //     }
+    // };
+
     async function createBlog(ev) {
         ev.preventDefault();
-
+    
         if (isUploading) {
-            await Promise.all(uploadImageQueue)
+            await Promise.all(uploadImageQueue);
         }
-
-        const data = { title, slug, images, description, client, livepreview, projectcategory: '', tags, status };
-
+    
+        // Ensure projectcategory is an array
+        const data = { 
+            title, 
+            slug,
+            livepreview, 
+            images, 
+            description, 
+            projectcategory: Array.isArray(projectcategory) ? projectcategory : [projectcategory], // Ensure it's an array
+            client, 
+            tags, 
+            status 
+        };
+    
         try {
+            console.log('Data being sent:', data); // Log to verify data structure
+    
             if (_id) {
                 await axios.put('http://localhost:3000/api/projects', { ...data, _id });
                 toast.success('Data Updated');
-
             } else {
-                console.log('Data being sent for new blog:', data); // Log the data being sent
                 await axios.post('http://localhost:3000/api/projects', data);
-                toast.success('project Created');
-
+                toast.success('Project Created');
             }
-            router.push('/projects')
-
+    
+            router.push('/projects');
             setRedirect(true);
         } catch (error) {
-            console.error('Error creating/updating projects:', error); // Log the error
-            toast.error('Failed to create/update projects'); // Notify user of failure
+            console.error('Error creating/updating project:', error);
+            toast.error('Failed to create/update project');
         }
     };
 
@@ -195,11 +234,11 @@ export default function Project(
                     >
                         <option value=''>Select Category</option>
                         <option value='Website Development'>website Development</option>
-                        <option value='App Development'>App Development</option>
+                        <option value='Full Stack'>Full Stack</option>
                         <option value='Design System'>Design System</option>
-                        <option value='App Development'>App Development</option>
-                        <option value='Website Migration'>Website Migration</option>
-                        <option value='E-commerce Site'>E-commerce Site</option>
+                        <option value='Next Js'>Next Js</option>
+                        <option value='Database'>Database</option>
+                        {/* <option value='E-commerce Site'>Kubernetes</option> */}
                         <option value='Performance Evalution'>Performance Evalution</option>
 
                     </select>
@@ -324,3 +363,43 @@ export default function Project(
         </>
     );
 }
+
+
+
+
+  async function createBlog(ev) {
+        ev.preventDefault();
+    
+        if (isUploading) {
+            await Promise.all(uploadImageQueue);
+        }
+    
+        // Pass `projectcategory` directly as an array
+        const data = { 
+            title, 
+            slug, 
+            images, 
+            description, 
+            projectcategory,  // Remove `formattedCategory`
+            tags, 
+            status 
+        };
+    
+        try {
+            console.log('Data being sent:', data); // Verify if the array format matches backend expectations
+    
+            if (_id) {
+                await axios.put('http://localhost:3000/api/projects', { ...data, _id });
+                toast.success('Data Updated');
+            } else {
+                await axios.post('http://localhost:3000/api/projects', data);
+                toast.success('Project Created');
+            }
+    
+            router.push('/projects');
+            setRedirect(true);
+        } catch (error) {
+            console.error('Error creating/updating project:', error);
+            toast.error('Failed to create/update project');
+        }
+    }

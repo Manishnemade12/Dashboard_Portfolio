@@ -9,13 +9,17 @@ const projectSchema = new Schema({
     images: [{ type: String }],
     description: { type: String },
     client: { type: String },
-    projectcategory: { type: String },
+    // projectcategory: { type: String },
+    projectcategory: {
+        type: [String], 
+        required: true
+    },
     tags: [{ type: String }],
     livepreview: { type: String },
     status: { type: String },
- 
-    
-},{
+
+
+}, {
     timestamps: true,
 });
 
